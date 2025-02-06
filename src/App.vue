@@ -4,7 +4,9 @@
       <div class="top"></div>
       <div class="main">
         <div class="main__left"></div>
-        <div class="main__center"></div>
+        <div class="main__center">
+          <editor />
+        </div>
         <div class="main__right"></div>
       </div>
     </div>
@@ -14,6 +16,8 @@
 
 <script setup>
 import { ref } from 'vue'
+
+import editor from './components/editor.vue'
 </script>
 
 <style scoped>
@@ -22,17 +26,17 @@ import { ref } from 'vue'
   min-height: 500px;
   width: 100%;
   min-width: 800px;
-  background-color: beige;
+  /* background-color: beige; */
 
   > .main_content {
     width: 100%;
-    height: calc(100% - 100px);
-    background-color: brown;
+    height: calc(100% - 50px);
+    border-bottom: 2px solid #ced4d6;
 
     > .top {
       width: 100%;
       height: 100px;
-      background-color: aquamarine;
+      border-bottom: 2px solid #ced4d6;
     }
 
     > .main {
@@ -43,27 +47,24 @@ import { ref } from 'vue'
       > .main__left {
         width: 300px;
         height: 100%;
-        background-color: darkgray;
+        border-right: 2px solid #ced4d6;
       }
 
       > .main__center {
         width: calc(100% - 400px);
         height: 100%;
-        background-color: bisque;
       }
 
       > .main__right {
         width: 100px;
         height: 100%;
-        background-color: blanchedalmond;
       }
     }
   }
 
   > .bottom_conent {
     width: 100%;
-    height: 100px;
-    background-color: antiquewhite;
+    height: 50px;
   }
 }
 </style>
