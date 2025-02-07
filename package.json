@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@antv/x6": "^2.18.1",
+    "@antv/x6-plugin-transform": "^2.1.8",
     "@vue-flow/background": "^1.3.2",
     "@vue-flow/core": "^1.42.1",
     "@vue-flow/resize-rotate-node": "^1.0.2",

@@ -4,6 +4,7 @@
 
 <script>
 import { Graph } from '@antv/x6'
+import { Transform } from '@antv/x6-plugin-transform'
 
 export default {
   name: 'X6Graph',
@@ -17,11 +18,33 @@ export default {
         container: this.$refs.container,
         width: 800,
         height: 600,
-        grid: true, // Включаем сетку
+        grid: true,
         connecting: {
-          router: 'manhattan', // Используем маршрутизатор для изгибов под 90 градусов
-          connector: 'rounded', // Закругленные углы для линий
+          router: 'manhattan',
         },
+        interacting: {
+          nodeMovable: true,
+        },
+        panning: true, // Включаем возможность перетаскивания холста
+        selecting: {
+          enabled: true,
+          multiple: true,
+          rubberband: true,
+          showNodeSelectionBox: true,
+        },
+      })
+
+      // Подключаем плагин Transform с настройкой только вращения
+      const transform = new Transform({
+        resizing: false, // Отключаем изменение размера
+        rotating: { enabled: true, grid: 90 }, // Включаем вращение
+      })
+      graph.use(transform)
+
+      // Добавляем логику для фиксации угла вращения на 90 градусов
+      graph.on('node:rotated', ({ node }) => {
+        const angle = node.angle()
+        console.log(angle)
       })
 
       // Создаем узлы с портами
@@ -34,33 +57,29 @@ export default {
         ports: {
           groups: {
             group1: {
-              position: 'left', // Порт слева
+              position: 'left',
               attrs: {
                 circle: {
-                  r: 4,
+                  r: 2,
                   magnet: true,
-                  stroke: '#5F95FF',
                   strokeWidth: 1,
-                  fill: '#fff',
                 },
               },
             },
             group2: {
-              position: 'right', // Порт справа
+              position: 'right',
               attrs: {
                 circle: {
-                  r: 4,
+                  r: 2,
                   magnet: true,
-                  stroke: '#5F95FF',
                   strokeWidth: 1,
-                  fill: '#fff',
                 },
               },
             },
           },
           items: [
-            { id: 'port1', group: 'group1' }, // Левый порт
-            { id: 'port2', group: 'group2' }, // Правый порт
+            { id: 'port1', group: 'group1' },
+            { id: 'port2', group: 'group2' },
           ],
         },
       })
@@ -77,11 +96,9 @@ export default {
               position: 'left',
               attrs: {
                 circle: {
-                  r: 4,
+                  r: 2,
                   magnet: true,
-                  stroke: '#5F95FF',
                   strokeWidth: 1,
-                  fill: '#fff',
                 },
               },
             },
@@ -89,11 +106,9 @@ export default {
               position: 'right',
               attrs: {
                 circle: {
-                  r: 4,
+                  r: 2,
                   magnet: true,
-                  stroke: '#5F95FF',
                   strokeWidth: 1,
-                  fill: '#fff',
                 },
               },
             },
@@ -114,26 +129,22 @@ export default {
         ports: {
           groups: {
             group1: {
-              position: 'top', // Порт сверху
+              position: 'top',
               attrs: {
                 circle: {
-                  r: 4,
+                  r: 2,
                   magnet: true,
-                  stroke: '#5F95FF',
                   strokeWidth: 1,
-                  fill: '#fff',
                 },
               },
             },
             group2: {
-              position: 'bottom', // Порт снизу
+              position: 'bottom',
               attrs: {
                 circle: {
-                  r: 4,
+                  r: 2,
                   magnet: true,
-                  stroke: '#5F95FF',
                   strokeWidth: 1,
-                  fill: '#fff',
                 },
               },
             },
@@ -147,18 +158,60 @@ export default {
 
       // Создаем связи между узлами
       graph.addEdge({
-        source: { cell: node1, port: 'port2' }, // Исходный узел и порт
-        target: { cell: node2, port: 'port1' }, // Целевой узел и порт
+        source: { cell: node1, port: 'port2' },
+        target: { cell: node2, port: 'port1' },
+        attrs: {
+          line: {
+            sourceMarker: {
+              name: 'ellipse',
+              rx: 2,
+              ry: 2,
+            },
+            targetMarker: {
+              name: 'ellipse',
+              rx: 2,
+              ry: 2,
+            },
+          },
+        },
       })
 
       graph.addEdge({
         source: { cell: node2, port: 'port2' },
         target: { cell: node3, port: 'port1' },
+        attrs: {
+          line: {
+            sourceMarker: {
+              name: 'ellipse',
+              rx: 2,
+              ry: 2,
+            },
+            targetMarker: {
+              name: 'ellipse',
+              rx: 2,
+              ry: 2,
+            },
+          },
+        },
       })
 
       graph.addEdge({
         source: { cell: node1, port: 'port2' },
         target: { cell: node3, port: 'port2' },
+        attrs: {
+          line: {
+            sourceMarker: {
+              name: 'ellipse',
+              rx: 2,
+              ry: 2,
+            },
+            targetMarker: {
+              name: 'ellipse',
+              rx: 2,
+              ry: 2,
+            },
+          },
+        },
       })
     },
   },
