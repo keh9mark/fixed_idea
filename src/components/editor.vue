@@ -19,8 +19,17 @@ export default {
         width: 800,
         height: 600,
         grid: true,
+
         connecting: {
           router: 'manhattan',
+          snap: true, // Привязка к портам
+          allowBlank: false, // Запретить создание ребер без портов
+          allowLoop: false, // Запретить создание петель
+          allowEdge: false, // Запретить создание ребер между ребрами
+          allowNode: false, // Запретить создание ребер между узлами (только через порты)
+          allowPort: true, // Разрешить создание ребер только через порты
+          highlight: true, // Подсвечивать порты при наведении
+          allowMulti: false,
         },
         interacting: {
           nodeMovable: true,
@@ -32,6 +41,15 @@ export default {
           rubberband: true,
           showNodeSelectionBox: true,
         },
+        defaultEdge: {
+          attrs: {
+            line: {
+              stroke: '#5F95FF', // Цвет линии
+              strokeWidth: 2, // Толщина линии
+              targetMarker: 'block', // Тип стрелки на конце
+            },
+          },
+        },
       })
 
       // Подключаем плагин Transform с настройкой только вращения
@@ -41,10 +59,48 @@ export default {
       })
       graph.use(transform)
 
-      // Добавляем логику для фиксации угла вращения на 90 градусов
-      graph.on('node:rotated', ({ node }) => {
-        const angle = node.angle()
-        console.log(angle)
+      graph.on('edge:mouseenter', ({ cell }) => {
+        cell.addTools([
+          { name: 'vertices' },
+          {
+            name: 'button-remove',
+            args: { distance: 20 },
+          },
+        ])
+      })
+
+      graph.on('edge:mouseleave', ({ cell }) => {
+        if (cell.hasTool('button-remove')) {
+          cell.removeTool('button-remove')
+        }
+      })
+
+      // Применяем настройку ко всем существующим ребрам
+      // graph.getEdges().forEach(configureEdge)
+
+      // graph.on('edge:added', ({ edge }) => {
+      //   // console.log('dd')
+      //   // configureEdge(edge)
+      // })
+
+      const node = graph.addNode({
+        x: 100,
+        y: 140,
+        width: 10, // Ширина узла
+        height: 10, // Высота узла (должна быть равна ширине для круга) // Текст внутри узла
+        attrs: {
+          body: {
+            magnet: true, // Узел может быть магнитом для соединений
+            rx: 40, // Радиус скругления по X (половина ширины)
+            ry: 40, // Радиус скругления по Y (половина высоты)
+            fill: '#000000', // Черный цвет заливки
+            stroke: '#000000', // Черный цвет обводки
+          },
+          label: {
+            fill: '#ffffff', // Белый цвет текста для контраста
+            fontSize: 14, // Размер текста
+          },
+        },
       })
 
       // Создаем узлы с портами
@@ -57,7 +113,6 @@ export default {
         ports: {
           groups: {
             group1: {
-              position: 'left',
               attrs: {
                 circle: {
                   r: 2,
@@ -67,7 +122,6 @@ export default {
               },
             },
             group2: {
-              position: 'right',
               attrs: {
                 circle: {
                   r: 2,
@@ -160,58 +214,58 @@ export default {
       graph.addEdge({
         source: { cell: node1, port: 'port2' },
         target: { cell: node2, port: 'port1' },
-        attrs: {
-          line: {
-            sourceMarker: {
-              name: 'ellipse',
-              rx: 2,
-              ry: 2,
-            },
-            targetMarker: {
-              name: 'ellipse',
-              rx: 2,
-              ry: 2,
-            },
-          },
-        },
+        // attrs: {
+        //   line: {
+        //     sourceMarker: {
+        //       // name: 'ellipse',
+        //       // rx: 2,
+        //       // ry: 2,
+        //     },
+        //     targetMarker: {
+        //       // name: 'ellipse',
+        //       // rx: 2,
+        //       // ry: 2,
+        //     },
+        //   },
+        // },
       })
 
       graph.addEdge({
         source: { cell: node2, port: 'port2' },
         target: { cell: node3, port: 'port1' },
-        attrs: {
-          line: {
-            sourceMarker: {
-              name: 'ellipse',
-              rx: 2,
-              ry: 2,
-            },
-            targetMarker: {
-              name: 'ellipse',
-              rx: 2,
-              ry: 2,
-            },
-          },
-        },
+        // attrs: {
+        //   line: {
+        //     sourceMarker: {
+        //       name: 'ellipse',
+        //       rx: 2,
+        //       ry: 2,
+        //     },
+        //     targetMarker: {
+        //       name: 'ellipse',
+        //       rx: 2,
+        //       ry: 2,
+        //     },
+        //   },
+        // },
       })
 
       graph.addEdge({
         source: { cell: node1, port: 'port2' },
         target: { cell: node3, port: 'port2' },
-        attrs: {
-          line: {
-            sourceMarker: {
-              name: 'ellipse',
-              rx: 2,
-              ry: 2,
-            },
-            targetMarker: {
-              name: 'ellipse',
-              rx: 2,
-              ry: 2,
-            },
-          },
-        },
+        // attrs: {
+        //   line: {
+        //     sourceMarker: {
+        //       name: 'ellipse',
+        //       rx: 2,
+        //       ry: 2,
+        //     },
+        //     targetMarker: {
+        //       name: 'ellipse',
+        //       rx: 2,
+        //       ry: 2,
+        //     },
+        //   },
+        // },
       })
     },
   },
