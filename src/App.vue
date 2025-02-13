@@ -53,6 +53,7 @@ import editor from './components/editor.vue'
       > .main__center {
         width: calc(100% - 400px);
         height: 100%;
+        display: flex;
       }
 
       > .main__right {
